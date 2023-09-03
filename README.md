@@ -2,32 +2,29 @@
 
 ## 项目描述
 
-- 本项目主要目的是从Trello上分享的ShareGPT语料链接中抽取中文/英文问答数据。一共3个语料：
-1. https://huggingface.co/datasets/cryscan/multilingual-share
-2. https://huggingface.co/datasets/anon8231489123/ShareGPT_Vicuna_unfiltered
-3. https://huggingface.co/datasets/Ejafa/GPT_4_with_ShareGPT/tree/main
-- 处理结果为jsonl文件，每行对应一对问答，包含问答文本，以及同一会话下多轮问答的唯一标识和序号，详细格式附后。
+- 本项目目的是将诗歌清洗为MNBVC的标准文本格式
+- 原文件和目标文件均为jsonl格式，每行对应一首诗歌，源格式和目标详细格式附后。
 
 ## 环境
 
 1. 下载本项目
 ```
-git clone ShareGPTQAExtractor-mnbvc
+git clone POEMExtractor-mnbvc
 ```
 2. 进入目录并安装依赖
 ```
-cd ShareGPTQAExtractor-mnbvc
+cd POEMExtractor-mnbvc
 pip install -r requirements.txt
 ```
 
 ## 用法
 
-通过以下命令将FILE文件转化并输出到以`ShareGPT`为名称的结果文件中。
+通过以下命令将FILE文件转化并输出到以`POEM`为名称的结果文件中。
 ```shell
-python sharegpt_extract.py FILE
+python sharepoem_extract.py FILE
 ```
 
-以上命令将输出时间戳结果文件例子`shareGPT_2023-07-17-00-30-43.jsonl`。
+以上命令将输出时间戳结果文件例子`sharePOEM_2023-07-17-00-30-43.jsonl`。
 
 ## 注意
 
@@ -35,105 +32,83 @@ python sharegpt_extract.py FILE
 
 ## 代码说明
 
-- `sharegpt_extract.py` 入口程序
-- `sharegpt_parser.py` ShareGPT解析器
+- `sharepoem_extract.py` 入口程序
 
+## 原始文件示例（一行）
+
+```json
+{
+  "title": "一个过程的小细节",
+  "author": "00913",
+  "content": "\n请把这把尖刀放回盒子里\n已经生锈了，它追随你的欲望\n它是一件记念的物品\n而你就是它尚未剖腹而生的婴儿\n\n已经习以为常，一群悒郁的病毒\n你擦干的刀刃，另一面切伤了手指\n在你的血流滴滴的那会儿\n你如此镇静地包扎有点职业化\n\n请把你的镜子彻底裸体地照出自己\n用白皙地肤色平息性感的挑逗\n你熟练地削一片柠檬地时候\n却解说了这是必要的生活\n\n让我摸一摸你的刀，可是你\n收起来了，而一个身体的智慧\n是将我构成了你无所畏忌的呢称\n你贸然的偷袭，这就堵住了我呼吸"
+}
+```
 
 ## 输出jsonl文件格式
 
-1. 每个jsonl文件，其大小略大于500MB。每行是一条问答数据，对应ShareGPT一个会话（即**conversations**，下同）中的一个问答。
-2. 对于每一个问答数据，其最高层次结构如下。
+1. 对于每一首诗歌数据，其最高层次结构如下。
 ```json
 {
-    "id":123456,
-    "问":"写一个超短小说",
-    "答":"他们相遇，又别离。岁月如梭，情感却不减。",
-    "来源":"ShareGPT",
-    "元数据":{
-        "create_time":"20230511 15:56:03",
-        "问题明细":"\"from\": \"human\"",
-        "回答明细":"\"from\": \"gpt\"",
-        "扩展字段":""
-    }
+    '文件名': '文件.txt',
+    '是否待查文件': False,
+    '是否重复文件': False,
+    '文件大小': 1024,
+    'simhash': 0,
+    '最长段落长度': 0,
+    '段落数': 0,
+    '去重段落数': 0,
+    '低质量段落数': 0,
+    '段落': []
 }
 ```
-3. 在ShareGPT语料中，`"扩展字段"`一共两个字段，会话的唯一标识和本条在会话中的序号，示例如下：
+2. 在json中，将每一行为一个段落，段落的json结构层次示例如下：
 ```json
-    {
-    "会话": "yOKd88p",
-    "多轮序号": 1
-    }
-```
-
-
-## 原始文件示例
-
-```json
-  {
-    "id": "yOKd88p",
-    "conversations": [
-      {
-        "from": "human",
-        "value": "Can you make me a Shakespearean script about a girl who has tummy troubles and can\u2019t fart not matter how hard she tries- so they think she is a witch"
-      },
-      {
-        "from": "gpt",
-        "value": "Sure, here's a Shakespearean script about a girl who c..."
-      },
-      {
-        "from": "human",
-        "value": "Can you change Mary\u2019s name to Katy"
-      },
-      {
-        "from": "gpt",
-        "value": "Certainly! Here's the revised script:\n\nAct I, Scene I\n\nEnter KATY,..."
-      }
-    ]
-  }
+{
+    '行号': line_number,
+    '是否重复': False,
+    '是否跨文件重复': False,
+    'md5': md5,
+    '内容': line
+}
 ```
 
 ## 结果示例
 
 ```json
 {
-    "id": 0,
-    "问": "Can you make me a Shakespearean script about a girl who has tummy troubles and can\u2019t fart not matter how hard she tries- so they think she is a witch",
-    "答": "Sure, here's a Shakespearean script about a girl who c...",
-    "来源": "ShareGPT",
-    "元数据": {
-        "create_time": "20230517 10:41:58",
-        "问题明细":"\"from\": \"human\"",
-        "回答明细":"\"from\": \"gpt\"",
-        "扩展字段": {
-                    "会话": "yOKd88p",
-                    "多轮序号": 1
-                    }
-    }
+    "文件名": "一个过程的小细节",
+    "是否待查文件": False,
+    "是否重复文件": False,
+    "文件大小": 1024,
+    "simhash": 0,
+    "最长段落长度": 0,
+    "段落数": 0,
+    "去重段落数": 0,
+    "低质量段落数": 0,
+    "段落": [
+        {
+          '行号': 1,
+          '是否重复': False,
+          '是否跨文件重复': False,
+          'md5': md5,
+          '内容': line
+        },
+        {
+          '行号': 2,
+          '是否重复': False,
+          '是否跨文件重复': False,
+          'md5': md5,
+          '内容': line
+        },
+        ...
+    ]
 }
-{
-    "id": 1,
-    "问": "Can you change Mary\u2019s name to Katy",
-    "答": "Certainly! Here's the revised script:\n\nAct I, Scene I\n\nEnter KATY,...",
-    "来源": "ShareGPT",
-    "元数据": {
-        "create_time": "20230517 10:41:58",
-        "问题明细":"\"from\": \"human\"",
-        "回答明细":"\"from\": \"gpt\"",
-        "扩展字段": {
-                    "会话": "yOKd88p",
-                    "多轮序号": 2
-                    }
-    }
-},
 ```
 
-**补充说明：上面的格式方便查看，最终输出到文件仍然为jsonl的规范，如下：**
-```json
-{"id": 0, "问": "Can you make me a ...", "答": "Sure...", "来源": "ShareGPT", "元数据": {"create_time": "20230517 10:41:58",...}}
-{"id": 0, "问": "Can you make me a ...", "答": "Sure...", "来源": "ShareGPT", "元数据": {"create_time": "20230517 10:41:58",...}}
-```
+**补充说明：上面的格式方便查看，最终输出到文件仍然为jsonl的规范。
 
 ## 相关项目
 
 [MNBVC](https://github.com/esbatmop/MNBVC)
 [WikiHowQAExtractor-mnbvc](https://github.com/wanicca/WikiHowQAExtractor-mnbvc)
+[ShareGPTQAExtractor-mnbvc](https://github.com/pany8125/ShareGPTQAExtractor-mnbvc)
