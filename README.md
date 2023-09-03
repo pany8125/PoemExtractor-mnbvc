@@ -1,4 +1,4 @@
-# ShareGPTQAExtractor-mnbvc
+# PoemExtractor-mnbvc
 
 ## 项目描述
 
@@ -9,11 +9,11 @@
 
 1. 下载本项目
 ```
-git clone POEMExtractor-mnbvc
+git clone PoemExtractor-mnbvc
 ```
 2. 进入目录并安装依赖
 ```
-cd POEMExtractor-mnbvc
+cd PoemExtractor-mnbvc
 pip install -r requirements.txt
 ```
 
@@ -105,7 +105,7 @@ python sharepoem_extract.py FILE
 }
 ```
 
-**补充说明：上面的格式方便查看，最终输出到文件仍然为jsonl的规范。
+**补充说明：上面的格式方便查看，最终输出到文件仍然为jsonl的规范。**
 
 ## 相关项目
 
