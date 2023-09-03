@@ -112,3 +112,4 @@ python sharepoem_extract.py FILE
 [MNBVC](https://github.com/esbatmop/MNBVC)
 [WikiHowQAExtractor-mnbvc](https://github.com/wanicca/WikiHowQAExtractor-mnbvc)
 [ShareGPTQAExtractor-mnbvc](https://github.com/pany8125/ShareGPTQAExtractor-mnbvc)
+[deduplication_mnbvc](https://github.com/aplmikex/deduplication_mnbvc)
