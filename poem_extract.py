@@ -7,15 +7,7 @@ from enum import Enum
 import schema
 import re
 
-# 定义一个枚举类
-class Json_str(Enum):
-    JSON_START = "{"
-    ID = '"id":'
-    CONVERSATION_START = '"conversations":'
-    CONVERSATION_END = ']'
-    JSON_END = '},'
-    JSON_END_END = '}'
-    NONE = ''
+
 
 # 读取文件
 # file_path_all = 'final_data_sample_230706test.json'  # 替换为实际文件路径
